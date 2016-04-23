@@ -4,23 +4,14 @@ var EventEmitter  = require('events').EventEmitter
 var objectAssign  = require('object-assign')
 
 var EVENT_CHANGE = 'event-user-change'
-var TREEMCons = require('../constants/TREEMConstants')
-var TREEMKeys = require('../constants/TREEMKeys')
-var userService = require('../services/UserService')
+var TREEMCons    = require('../constants/TREEMConstants')
+var TREEMKeys    = require('../constants/TREEMKeys')
+var userService  = require('../services/ODService')
 
 
 /******************************************************************************/
 
 var UserStore = objectAssign({}, EventEmitter.prototype, {
-
-  loginUser: function () {
-    var self = this
-
-    TREEMCons.user.fullName = "Giovanni Aguirre"
-    TREEMCons.user.email    = "giovanni@fake.com"
-
-    self.emitChange()
-  },
 
   oDLogin: function () {
     var targetUrl = 'https://login.live.com/oauth20_authorize.srf?'
@@ -61,7 +52,7 @@ var UserStore = objectAssign({}, EventEmitter.prototype, {
   },
 
   userIsLoggedIn: function () {
-    return TREEMCons.user.email && TREEMCons.user.email.length > 0
+    return true //TREEMCons.user.email && TREEMCons.user.email.length > 0
   },
 
   emitChange: function() {
@@ -79,10 +70,6 @@ var UserStore = objectAssign({}, EventEmitter.prototype, {
 
 AppDispatcher.register(function (action) {
   switch (action.actionType) {
-
-    case TREEMCons.actionTypes.USER_LOGIN:
-      UserStore.loginUser()
-      break
 
     case TREEMCons.actionTypes.USER_LOGOUT:
       UserStore.logoutUser()

@@ -11,7 +11,9 @@ module.exports = {
     USER_LOGOUT: 'action-user-logout',
 
     USER_OD_LOGIN: 'action-user-onedrive-login',
-    USER_OD_CODE_LOGIN: 'action-user-onedrive-code-login'
+    USER_OD_CODE_LOGIN: 'action-user-onedrive-code-login',
+
+    VIEW_GO_TO_VIEW: 'action-view-go-to-view'
   },
 
   //

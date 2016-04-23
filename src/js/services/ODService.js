@@ -2,7 +2,7 @@
 var request = require('request')
 var TREEMCons = require('../constants/TREEMConstants')
 
-var UserService = {
+var ODService = {
 
   oDCodeLogin(oDCode, callback) {
 
@@ -21,4 +21,4 @@ var UserService = {
 }
 
 
-module.exports = UserService
+module.exports = ODService

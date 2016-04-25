@@ -13,6 +13,7 @@ function getState() {
     oDAccountsFetchTries: oDSettingsStore.getODAccountsFetchTries(),
 
     currentFolder: oDSettingsStore.getCurrentFolder(),
+    foldersNavHistory: oDSettingsStore.getFoldersNavHistory(),
     subFolders: oDSettingsStore.getSubFolders(),
     subFoldersFetchTries: oDSettingsStore.getSubFoldersFetchTries(),
     subFoldersOwner: oDSettingsStore.getSubFoldersOwner()
@@ -54,9 +55,8 @@ var ODSettings = React.createClass({
     ODSettingsActions.apiFetchChildren(oDEmail, 'folder')
   },
 
-  _fetchFolderChildren(folder) {
-    console.log('Fetching for parent: ' + folder.id)
-    ODSettingsActions.apiFetchChildren(this.state.subFoldersOwner, 'folder', folder)
+  _fetchFolderChildren(folderId) {
+    ODSettingsActions.apiFetchChildren(this.state.subFoldersOwner, 'folder', folderId)
   },
 
   _constructSettingsPane() {
@@ -82,13 +82,17 @@ var ODSettings = React.createClass({
     else {
       var foldersListItems = []
 
-      if (this.state.currentFolder && this.state.currentFolder.parentReference) {
-        console.log(this.state.currentFolder)
+      if (this.state.foldersNavHistory.length > 0) {
+        var parentId = null
+        if (this.state.foldersNavHistory.length > 1) {
+          parentId = this.state.foldersNavHistory[this.state.foldersNavHistory.length - 2]
+        }
+        
         foldersListItems.push(
           <button
             className="list-group-item"
             key={i}
-            onClick={this._fetchFolderChildren.bind(null, this.state.currentFolder.parentReference)}
+            onClick={this._fetchFolderChildren.bind(null, parentId)}
             type="button"
           >
             <span className="fa fa-angle-left"></span>
@@ -101,14 +105,26 @@ var ODSettings = React.createClass({
         var subFolder = this.state.subFolders[i]
 
         foldersListItems.push(
-          <button
+          <div
               className="list-group-item"
               key={i}
-              onClick={this._fetchFolderChildren.bind(null, subFolder)}
+              onClick={this._fetchFolderChildren.bind(null, subFolder.id)}
               type="button"
           >
-            {subFolder.name}
-          </button>
+            <div className="row">
+              <div className="col-xs-1">
+                <span className="fa fa-folder-o"></span>
+              </div>
+              <div className="col-xs-10">
+                <span>{subFolder.name}</span>
+              </div>
+              <div className="col-xs-1">
+                <a className="btn btn-default btn-sm">
+                  <span className="fa fa-check-square-o"></span>
+                </a>
+              </div>
+            </div>
+          </div>
         )
       }
 
@@ -119,11 +135,19 @@ var ODSettings = React.createClass({
       )
     }
 
+    var goHomeBtn = (
+      <button
+          className="btn btn-default btn-sm pull-right"
+          onClick={this._fetchFolderChildren.bind(null, null)}>
+        <span className="fa fa-home"></span>
+      </button>
+    )
+
     return (
       <ODSettingsPane
           paneBody={settingsPaneBody}
           title="Account folders"
-          topBarButton=""
+          topBarButton={goHomeBtn}
       />
     )
   },

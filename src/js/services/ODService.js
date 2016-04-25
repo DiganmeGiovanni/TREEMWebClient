@@ -37,7 +37,7 @@ var ODService = {
     })
   },
 
-  fetchChildren(oDEmail, filter, parentFolder) {
+  fetchChildren(oDEmail, filter, parentFolderId) {
     var params = {
       method: 'GET',
       url: TREEMCons.apiUrls.OD_CHILDREN,
@@ -47,14 +47,14 @@ var ODService = {
       }
     }
 
-    if (parentFolder && parentFolder.id && parentFolder.id != "") {
-      params.qs.parentId = parentFolder.id
+    if (parentFolderId && parentFolderId != "") {
+      params.qs.parentId = parentFolderId
     }
 
     request(params, function (err, res, body) {
       if (!err) {
         body = JSON.parse(body)
-        oDSettingsActions.receiveChildren(body.value, parentFolder)
+        oDSettingsActions.receiveChildren(body.value, parentFolderId)
       }
     })
   }

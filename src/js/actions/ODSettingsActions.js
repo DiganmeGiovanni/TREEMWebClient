@@ -10,12 +10,12 @@ var ODSettingsActions = {
     })
   },
   
-  apiFetchChildren(oDEmail, filter, parentFolder) {
+  apiFetchChildren(oDEmail, filter, parentFolderId) {
     AppDispatcher.dispatch({
       actionType: TREEMCons.actionTypes.api.OD_FETCH_CHILDREN,
       oDEmail: oDEmail,
       filter: filter,
-      parentFolder: parentFolder
+      parentFolderId: parentFolderId
     })
   },
   
@@ -26,11 +26,11 @@ var ODSettingsActions = {
     })
   },
 
-  receiveChildren(subFolders, parentFolder) {
+  receiveChildren(subFolders, parentFolderId) {
     AppDispatcher.dispatch({
       actionType: TREEMCons.actionTypes.api.OD_RECEIVE_CHILDREN,
       subFolders: subFolders,
-      parentFolder: parentFolder
+      parentFolderId: parentFolderId
     })
   }
 }

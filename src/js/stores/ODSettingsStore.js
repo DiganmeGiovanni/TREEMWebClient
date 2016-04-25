@@ -13,6 +13,7 @@ var oDAccounts = []
 var oDAccountsFetchTries = 0
 
 var currentFolder
+var foldersNavHistory = []
 
 var subFolders = []
 var subFoldersFetchTries = 0
@@ -35,6 +36,10 @@ var ODSettingsStore = objectAssign({}, EventEmitter.prototype, {
   getCurrentFolder() {
     return currentFolder
   },
+
+  getFoldersNavHistory() {
+    return foldersNavHistory
+  },
   
   getSubFolders() {
     return subFolders
@@ -48,18 +53,30 @@ var ODSettingsStore = objectAssign({}, EventEmitter.prototype, {
     return subFoldersOwner
   },
 
-  receiveODAccounts(incommingODAccounts) {
-    oDAccounts = incommingODAccounts
+  receiveODAccounts(incomingODAccounts) {
+    oDAccounts = incomingODAccounts
     oDAccountsFetchTries += 1
 
     this.emitChange()
   },
 
-  receiveChildren(incommingSubFolders, parentFolder) {
-    subFolders = incommingSubFolders
-    currentFolder = parentFolder
+  receiveChildren(incomingSubFolders, parentFolderId) {
+    subFolders = incomingSubFolders
     subFoldersFetchTries += 1
-
+    
+    if (parentFolderId && parentFolderId != "") {
+      var currentFolderIndex = foldersNavHistory.indexOf(parentFolderId)
+      if (currentFolderIndex == -1) {
+        foldersNavHistory.push(parentFolderId)
+      }
+      else {
+        foldersNavHistory = foldersNavHistory.slice(0, currentFolderIndex + 1)
+      }
+    }
+    else { // User is in root folder again (Clear history)
+      foldersNavHistory = []
+    }
+    
     this.emitChange()
   },
 
@@ -67,8 +84,8 @@ var ODSettingsStore = objectAssign({}, EventEmitter.prototype, {
     oDService.fetchODAccounts()
   },
   
-  apiFetchChildren(oDEmail, filter, parentFolder) {
-    oDService.fetchChildren(oDEmail, filter, parentFolder)
+  apiFetchChildren(oDEmail, filter, parentFolderId) {
+    oDService.fetchChildren(oDEmail, filter, parentFolderId)
     displayingPane = 'od-folders'
     subFoldersFetchTries = 0
     subFoldersOwner = oDEmail
@@ -98,7 +115,7 @@ AppDispatcher.register(function (action) {
       break
     
     case TREMCons.actionTypes.api.OD_FETCH_CHILDREN:
-      ODSettingsStore.apiFetchChildren(action.oDEmail, action.filter, action.parentFolder)
+      ODSettingsStore.apiFetchChildren(action.oDEmail, action.filter, action.parentFolderId)
       break
 
     case TREMCons.actionTypes.api.OD_RECEIVE_ACCOUNTS:
@@ -106,7 +123,7 @@ AppDispatcher.register(function (action) {
       break
 
     case TREMCons.actionTypes.api.OD_RECEIVE_CHILDREN:
-      ODSettingsStore.receiveChildren(action.subFolders, action.parentFolder)
+      ODSettingsStore.receiveChildren(action.subFolders, action.parentFolderId)
       break
   }
 })

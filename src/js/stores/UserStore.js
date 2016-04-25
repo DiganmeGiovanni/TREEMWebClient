@@ -6,7 +6,7 @@ var objectAssign  = require('object-assign')
 var EVENT_CHANGE = 'event-user-change'
 var TREEMCons    = require('../constants/TREEMConstants')
 var TREEMKeys    = require('../constants/TREEMKeys')
-var userService  = require('../services/ODService')
+var oDService  = require('../services/ODService')
 
 
 /******************************************************************************/
@@ -26,7 +26,7 @@ var UserStore = objectAssign({}, EventEmitter.prototype, {
   oDCodeLogin: function (oDCode) {
     var self = this
 
-    userService.oDCodeLogin(oDCode, function (err, user) {
+    oDService.oDCodeLogin(oDCode, function (err, user) {
       if (err) {
         //console.error('Error while login user on backend')
         //console.error(err)

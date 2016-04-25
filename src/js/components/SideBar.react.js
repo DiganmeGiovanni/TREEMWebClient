@@ -60,7 +60,6 @@ var SideBar = React.createClass({
   },
 
   _goToView(viewName) {
-    console.log('Click detected: ' + viewName)
     ViewActions.goToView(viewName)
   }
 

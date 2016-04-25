@@ -8,16 +8,19 @@ var LandingPage = require('../components/LandingPage.react')
 var HeaderBar   = require('./HeaderBar.react')
 var SideBar     = require('./SideBar.react')
 var MediaGrid   = require('./MediaGrid.react')
-var ODSettings  = require('./ODSettings.react')
+var ODSettings  = require('./odsettings/ODSettings.react.js')
 
+function getAppState() {
+  return {
+    userIsLoggedIn: UserStore.userIsLoggedIn(),
+    currentView: ViewStore.getCurrentView(),
+  }
+}
 
 var TREEMApp = React.createClass({
 
   getInitialState() {
-    return {
-      userIsLoggedIn: UserStore.userIsLoggedIn(),
-      currentView: ViewStore.getCurrentView()
-    }
+    return getAppState()
   },
 
   componentDidMount: function () {
@@ -56,10 +59,7 @@ var TREEMApp = React.createClass({
   },
 
   _onChange: function () {
-    this.setState({
-      userIsLoggedIn: UserStore.userIsLoggedIn(),
-      currentView: ViewStore.getCurrentView()
-    })
+    this.setState(getAppState())
   },
 })
 

@@ -44,7 +44,7 @@ var TREEMApp = React.createClass({
       return (
         <div className="full-height">
           <HeaderBar />
-          <div className="columns full-height-minus64">
+          <div className="columns full-height-minus-header-bar">
             <SideBar currentView={this.state.currentView} />
             {currentComponent}
           </div>

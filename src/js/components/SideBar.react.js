@@ -17,7 +17,8 @@ var SideBar = React.createClass({
                   ? "menu-group-item menu-group-item-active"
                   : "menu-group-item"
             }>
-            Now Playing
+            <span className="fa fa-play"></span>
+            <span className="hidden-xs">&nbsp;&nbsp;Now Playing</span>
           </a>
           <a
             href="#"
@@ -27,12 +28,13 @@ var SideBar = React.createClass({
                   ? "menu-group-item menu-group-item-active"
                   : "menu-group-item"
             }>
-            Media Library
+            <span className="fa fa-cubes"></span>
+            <span className="hidden-xs">&nbsp;&nbsp;Media Library</span>
           </a>
 
         </div>
         <div className="menu-group">
-          <div className="menu-group-header">MEDIA SOURCES</div>
+          <div className="menu-group-header hidden-xs">MEDIA SOURCES</div>
           <a
             href="#"
             onClick={this._goToView.bind(null, 'oneDrive')}
@@ -41,7 +43,8 @@ var SideBar = React.createClass({
                   ? "menu-group-item menu-group-item-active"
                   : "menu-group-item"
             }>
-            OneDrive
+            <span className="fa fa-cloud"></span>
+            <span className="hidden-xs">&nbsp;&nbsp;OneDrive</span>
           </a>
           <a
             href="#"
@@ -51,7 +54,8 @@ var SideBar = React.createClass({
                   ? "menu-group-item menu-group-item-active"
                   : "menu-group-item"
             }>
-            Google Drive
+            <span className="fa fa-cloud"></span>
+            <span className="hidden-xs">&nbsp;&nbsp;Google Drive</span>
           </a>
 
         </div>

@@ -6,8 +6,8 @@ const HeaderBar = React.createClass({
 
   render: function () {
     return (
-      <div className="headerbar">
-        <span className="headerbar-title">TREEM</span>
+      <div className="header-bar">
+        <span className="header-bar-title">TREEM</span>
       </div>
     )
   }

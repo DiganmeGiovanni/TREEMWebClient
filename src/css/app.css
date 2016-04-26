@@ -28,7 +28,7 @@ body, html {
   min-height: 100%;
 }
 
-.full-height-minus64 {
+.full-height-minus-header-bar {
   height: calc(100% - 64px);
   max-height: calc(100% - 64px);
   min-height: calc(100% - 64px);
@@ -37,7 +37,7 @@ body, html {
 /************************------------------------------------------------------/
 /** HeaderBar component *******************************************************/
 
-.headerbar {
+.header-bar {
   background: #2E3E50;
   color: #cccccc;
   height: 64px;
@@ -45,7 +45,7 @@ body, html {
   width: 100%;
 }
 
-.headerbar-title {
+.header-bar-title {
   font-size: 1.5em;
 }
 
@@ -110,7 +110,38 @@ body, html {
 
 .settings-panel {
   margin: auto;
-  width: 40%;
 }
 
 
+/******************************************************************************/
+
+@media (max-width: 767px) {
+
+  .full-height-minus-header-bar {
+    height: calc(100% - 55px);
+    max-height: calc(100% - 55px);
+    min-height: calc(100% - 55px);
+  }
+
+  .header-bar {
+    height: 55px;
+    padding: 14px;
+  }
+
+  .sidebar {
+    width: 45px;
+  }
+
+  .sidebar .menu-group {
+    margin-top: 10px;
+  }
+
+  .sidebar .menu-group-item {
+    padding: 10px 13px 10px 13px;
+  }
+
+  .media-grid,
+  .settings {
+    width: calc(100% - 45px);
+  }
+}

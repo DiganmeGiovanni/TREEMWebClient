@@ -14,7 +14,7 @@ var ODSettingsPane = React.createClass({
   
   render() {
     return (
-      <div className="col-xs-12">
+      <div className="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
         <div className="panel panel-default settings-panel">
           <div className="panel-heading">
             <div className="panel-title">

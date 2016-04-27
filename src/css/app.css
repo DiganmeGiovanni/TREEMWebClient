@@ -7,6 +7,26 @@ body, html {
   min-height: 100%;
 }
 
+.btn-clean {
+  background: transparent;
+  color: #111;
+  border: none;
+  padding: 5px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.sutil {
+  background: rgba(0, 0, 0, 0.04);
+  color: #666;
+}
+
 .no-padding {
   padding: 0px;
 }
@@ -67,7 +87,6 @@ body, html {
 .sidebar .menu-group-item {
   color: #D5D5D5;
   display: inline-block;
-  font-size: 0.94em;
   padding: 10px 10px 10px 20px;
   text-decoration: none;
   width: 100%;
@@ -85,7 +104,7 @@ body, html {
 
 .sidebar .menu-group-header {
   color: #CCCCCC;
-  font-size: 0.65em;
+  font-size: 0.85em;
   font-weight: bold;
   padding: 10px;
 }

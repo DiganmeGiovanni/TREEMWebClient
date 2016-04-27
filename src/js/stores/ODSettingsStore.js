@@ -12,12 +12,15 @@ var displayingPane = 'od-accounts'
 var oDAccounts = []
 var oDAccountsFetchTries = 0
 
+var oDLibraries = []
+var oDLibrariesFetchTries = 0
+
 var currentFolder
 var foldersNavHistory = []
 
 var subFolders = []
 var subFoldersFetchTries = 0
-var subFoldersOwner = 0
+var librariesOwner = ''
 
 var ODSettingsStore = objectAssign({}, EventEmitter.prototype, {
   
@@ -31,6 +34,14 @@ var ODSettingsStore = objectAssign({}, EventEmitter.prototype, {
   
   getODAccountsFetchTries() {
     return oDAccountsFetchTries
+  },
+  
+  getODLibraries() {
+    return oDLibraries
+  },
+  
+  getODLibrariesFetchTries() {
+    return oDLibrariesFetchTries
   },
 
   getCurrentFolder() {
@@ -49,13 +60,20 @@ var ODSettingsStore = objectAssign({}, EventEmitter.prototype, {
     return subFoldersFetchTries
   },
 
-  getSubFoldersOwner() {
-    return subFoldersOwner
+  getLibrariesOwner() {
+    return librariesOwner
   },
 
   receiveODAccounts(incomingODAccounts) {
     oDAccounts = incomingODAccounts
     oDAccountsFetchTries += 1
+
+    this.emitChange()
+  },
+  
+  receiveODLibraries(incomingODLibraries) {
+    oDLibraries = incomingODLibraries
+    oDLibrariesFetchTries += 1
 
     this.emitChange()
   },
@@ -81,16 +99,31 @@ var ODSettingsStore = objectAssign({}, EventEmitter.prototype, {
   },
 
   apiFetchAccounts() {
+    displayingPane = 'od-accounts'
     oDService.fetchODAccounts()
   },
   
   apiFetchChildren(oDEmail, filter, parentFolderId) {
     oDService.fetchChildren(oDEmail, filter, parentFolderId)
     displayingPane = 'od-folders'
+    subFolders = []
     subFoldersFetchTries = 0
-    subFoldersOwner = oDEmail
 
     this.emitChange()
+  },
+  
+  apiFetchODLibraries(oDEmail) {
+    displayingPane = 'od-libraries'
+    oDLibrariesFetchTries = 0
+    librariesOwner = oDEmail
+
+    oDService.fetchODLibraries(oDEmail)
+    this.emitChange()
+  },
+  
+  createODLibrary(folderId, folderName, oDEmail) {
+    oDService.createODLibrary(folderId, folderName, oDEmail)
+    this.apiFetchODLibraries(librariesOwner)
   },
 
   emitChange: function() {
@@ -110,6 +143,10 @@ AppDispatcher.register(function (action) {
   
   switch (action.actionType) {
 
+    case TREMCons.actionTypes.api.OD_CREATE_LIBRARY:
+      ODSettingsStore.createODLibrary(action.folderId, action.folderName, action.oDEmail)
+      break
+
     case TREMCons.actionTypes.api.OD_FETCH_ACCOUNTS:
       ODSettingsStore.apiFetchAccounts()
       break
@@ -118,12 +155,20 @@ AppDispatcher.register(function (action) {
       ODSettingsStore.apiFetchChildren(action.oDEmail, action.filter, action.parentFolderId)
       break
 
+    case TREMCons.actionTypes.api.OD_FETCH_LIBRARIES:
+      ODSettingsStore.apiFetchODLibraries(action.oDEmail)
+      break
+
     case TREMCons.actionTypes.api.OD_RECEIVE_ACCOUNTS:
       ODSettingsStore.receiveODAccounts(action.oDAccounts)
       break
 
     case TREMCons.actionTypes.api.OD_RECEIVE_CHILDREN:
       ODSettingsStore.receiveChildren(action.subFolders, action.parentFolderId)
+      break
+
+    case TREMCons.actionTypes.api.OD_RECEIVE_LIBRARIES:
+      ODSettingsStore.receiveODLibraries(action.oDLibraries)
       break
   }
 })

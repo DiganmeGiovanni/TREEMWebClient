@@ -11,12 +11,14 @@ function getState() {
     displaying: oDSettingsStore.getDisplayingPane(),
     oDAccounts: oDSettingsStore.getODAccounts(),
     oDAccountsFetchTries: oDSettingsStore.getODAccountsFetchTries(),
+    oDLibrariesOwner: oDSettingsStore.getLibrariesOwner(),
+    oDLibraries: oDSettingsStore.getODLibraries(),
+    oDLibrariesFetchTries: oDSettingsStore.getODLibrariesFetchTries(),
 
     currentFolder: oDSettingsStore.getCurrentFolder(),
     foldersNavHistory: oDSettingsStore.getFoldersNavHistory(),
     subFolders: oDSettingsStore.getSubFolders(),
     subFoldersFetchTries: oDSettingsStore.getSubFoldersFetchTries(),
-    subFoldersOwner: oDSettingsStore.getSubFoldersOwner()
   }
 }
 
@@ -55,8 +57,22 @@ var ODSettings = React.createClass({
     ODSettingsActions.apiFetchChildren(oDEmail, 'folder')
   },
 
+  _fetchAccountLibraries(oDEmail) {
+    ODSettingsActions.apiFetchLibraries(oDEmail)
+  },
+
   _fetchFolderChildren(folderId) {
-    ODSettingsActions.apiFetchChildren(this.state.subFoldersOwner, 'folder', folderId)
+    ODSettingsActions.apiFetchChildren(this.state.oDLibrariesOwner, 'folder', folderId)
+  },
+  
+  _createODLibrary(folderId, folderName, e) {
+    e.stopPropagation()
+    
+    ODSettingsActions.createODLibrary(
+      folderId,
+      folderName,
+      this.state.oDLibrariesOwner
+    )
   },
 
   _constructSettingsPane() {
@@ -65,6 +81,9 @@ var ODSettings = React.createClass({
     }
     else if (this.state.displaying === 'od-folders') {
       return this._constructODFoldersPane()
+    }
+    else if (this.state.displaying === 'od-libraries') {
+      return this._constructODLibrariesPane()
     }
   },
 
@@ -104,28 +123,63 @@ var ODSettings = React.createClass({
       for (var i=0; i < this.state.subFolders.length; i++) {
         var subFolder = this.state.subFolders[i]
 
-        foldersListItems.push(
-          <div
-              className="list-group-item"
+        if (subFolder.isTREEMLibrary) {
+          foldersListItems.push(
+            <div className="list-group-item disabled" key={i} type="button">
+              <div className="row">
+                <div className="col-xs-10">
+                  <span>{subFolder.name}</span>
+                  <span>&nbsp;&nbsp;</span>
+                  <span className="label label-success">TREEM Library</span>
+                </div>
+              </div>
+            </div>
+          )
+        }
+        else {
+          foldersListItems.push(
+            <div
+              className="list-group-item clickable"
               key={i}
               onClick={this._fetchFolderChildren.bind(null, subFolder.id)}
               type="button"
-          >
-            <div className="row">
-              <div className="col-xs-1">
-                <span className="fa fa-folder-o"></span>
-              </div>
-              <div className="col-xs-10">
-                <span>{subFolder.name}</span>
-              </div>
-              <div className="col-xs-1">
-                <a className="btn btn-default btn-sm">
-                  <span className="fa fa-check-square-o"></span>
-                </a>
+            >
+              <div className="row">
+                <div className="col-xs-10">
+                  <span>{subFolder.name}</span>
+                </div>
+
+                <div className="col-xs-2 no-padding">
+                  <div className="dropdown">
+                    <button
+                      className="btn btn-default pull-right btn-clean"
+                      style={{'paddingTop': '0px', 'paddingBottom': '0px', 'paddingLeft': '10px', 'paddingRight': '10px'}}
+                      onClick={this._noPropagate}
+                      data-toggle="dropdown">
+                      <span className="fa fa-ellipsis-v"></span>
+                    </button>
+                    <ul className="dropdown-menu dropdown-menu-right">
+                      <li>
+                        <a
+                          href="#"
+                          onClick={
+                            this._createODLibrary.bind(
+                              null,
+                              subFolder.id,
+                              subFolder.name
+                            )
+                          }
+                        >
+                          Add to library
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        )
+          )
+        }
       }
 
       settingsPaneBody = (
@@ -135,19 +189,26 @@ var ODSettings = React.createClass({
       )
     }
 
-    var goHomeBtn = (
-      <button
-          className="btn btn-default btn-sm pull-right"
+    var headerButtons = (
+      <div className="pull-right">
+        <button
+          className="btn btn-default btn-clean pull-right"
           onClick={this._fetchFolderChildren.bind(null, null)}>
-        <span className="fa fa-home"></span>
-      </button>
+          <span className="fa fa-home"></span>
+        </button>
+        <button
+          className="btn btn-default btn-clean pull-right"
+          onClick={ODSettingsActions.apiFetchAccounts}>
+          <span className="fa fa-users"></span>
+        </button>
+      </div>
     )
 
     return (
       <ODSettingsPane
           paneBody={settingsPaneBody}
           title="Account folders"
-          topBarButton={goHomeBtn}
+          topBarButton={headerButtons}
       />
     )
   },
@@ -181,7 +242,7 @@ var ODSettings = React.createClass({
           <button
               className="list-group-item"
               key={i}
-              onClick={this._fetchAccountFolders.bind(null, this.state.oDAccounts[i])}
+              onClick={this._fetchAccountLibraries.bind(null, this.state.oDAccounts[i])}
               type="button">
             {this.state.oDAccounts[i]}
           </button>
@@ -189,25 +250,96 @@ var ODSettings = React.createClass({
       }
 
       settingsPaneBody = (
-        <div className="list-group">
-          {accountsListItems}
+        <div>
+          <div className="list-group">
+            {accountsListItems}
+          </div>
+          <div className="list-group">
+            <div className="list-group-item text-center clickable sutil">
+              <span>Add another account</span>
+            </div>
+          </div>
         </div>
       )
     }
-
-    var topBarButton = (
-      <button className="btn btn-primary btn-sm pull-right">
-        <span className="fa fa-plus"></span>
-      </button>
-    )
 
     return (
       <ODSettingsPane
           paneBody={settingsPaneBody}
           title="Connected accounts"
-          topBarButton={topBarButton}
+          topBarButton=''
       />
     )
+  },
+
+  _constructODLibrariesPane() {
+      var settingsPaneBody = ''
+      if (this.state.oDLibrariesFetchTries > 0 && this.state.oDLibraries.length == 0) {
+        settingsPaneBody = (
+          <div className="col-xs-12 text-center">
+            <h2 className="fa fa-3x fa-cubes"></h2>
+            <h5>It seems that you don't have OneDrive libraries</h5>
+            <button
+                className="btn btn-default"
+                onClick={this._fetchAccountFolders.bind(null, this.state.oDLibrariesOwner)}
+            >
+              <span className="fa fa-plus"></span>
+              <span>&nbsp;&nbsp; Add a folder as library</span>
+            </button>
+          </div>
+        )
+      }
+      else if (this.state.oDLibrariesFetchTries == 0) {
+        settingsPaneBody = (
+          <div className="col-xs-12 text-center">
+            <h2 className="fa fa-cog fa-spin fa-3x fa-fw"></h2>
+            <h5>Loading OneDrive libraries</h5>
+          </div>
+        )
+      }
+      else {
+        var librariesListItems = []
+        for (var i=0; i< this.state.oDLibraries.length; i++) {
+          librariesListItems.push(
+            <button
+              className="list-group-item"
+              key={i}
+              type="button">
+              <span className="fa fa-music"></span>
+              <span>&nbsp;&nbsp;</span>
+              <span>{this.state.oDLibraries[i].folderName}</span>
+            </button>
+          )
+        }
+
+        settingsPaneBody = (
+          <div>
+            <div className="list-group">
+              {librariesListItems}
+            </div>
+            <div className="list-group">
+              <div 
+                  className="list-group-item text-center clickable sutil"
+                  onClick={this._fetchAccountFolders.bind(null, this.state.oDLibrariesOwner)}
+              >
+                <span>Add another library</span>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
+      return (
+        <ODSettingsPane
+          paneBody={settingsPaneBody}
+          title="OneDrive Media libraries"
+          topBarButton=''
+        />
+      )
+  },
+
+  _noPropagate(e) {
+    e.stopPropagation()
   },
 
   _onChange() {

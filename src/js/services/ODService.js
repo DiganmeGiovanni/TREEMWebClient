@@ -20,6 +20,24 @@ var ODService = {
     })
   },
 
+  createODLibrary: function(folderId, folderName, oDEmail) {
+    var params = {
+      method: 'POST',
+      url: TREEMCons.apiUrls.OD_LIBRARY,
+      form: {
+        folderid: folderId,
+        odemail: oDEmail,
+        foldername: folderName
+      }
+    }
+
+    request(params, function (err, res, body) {
+      if (!err) {
+        // body = JSON.parse(body)
+      }
+    })
+  },
+
   fetchODAccounts: function () {
     var params = {
       method: 'GET',
@@ -33,6 +51,23 @@ var ODService = {
       if (!err) {
         body = JSON.parse(body)
         oDSettingsActions.receiveAccounts(body)
+      }
+    })
+  },
+  
+  fetchODLibraries(oDEmail) {
+    var params = {
+      method: 'GET',
+      url: TREEMCons.apiUrls.OD_LIBRARIES,
+      qs: {
+        odemail: oDEmail
+      }
+    }
+    
+    request(params, function (err, res, body) {
+      if (!err) {
+        body = JSON.parse(body)
+        oDSettingsActions.receiveODLibraries(body)
       }
     })
   },

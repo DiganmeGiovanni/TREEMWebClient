@@ -18,6 +18,22 @@ var ODSettingsActions = {
       parentFolderId: parentFolderId
     })
   },
+
+  apiFetchLibraries(oDEmail) {
+    AppDispatcher.dispatch({
+      actionType: TREEMCons.actionTypes.api.OD_FETCH_LIBRARIES,
+      oDEmail: oDEmail
+    })
+  },
+  
+  createODLibrary(folderId, folderName, oDEmail) {
+    AppDispatcher.dispatch({
+      actionType: TREEMCons.actionTypes.api.OD_CREATE_LIBRARY,
+      folderId: folderId,
+      folderName: folderName,
+      oDEmail: oDEmail
+    })
+  },
   
   receiveAccounts(oDAccounts) {
     AppDispatcher.dispatch({
@@ -31,6 +47,13 @@ var ODSettingsActions = {
       actionType: TREEMCons.actionTypes.api.OD_RECEIVE_CHILDREN,
       subFolders: subFolders,
       parentFolderId: parentFolderId
+    })
+  },
+  
+  receiveODLibraries(oDLibraries) {
+    AppDispatcher.dispatch({
+      actionType: TREEMCons.actionTypes.api.OD_RECEIVE_LIBRARIES,
+      oDLibraries: oDLibraries
     })
   }
 }

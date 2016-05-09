@@ -1,5 +1,6 @@
 
 var AppDispatcher = require('../dispatcher/AppDispatcher')
+var oDService = require('../services/ODService')
 var TREEMCons = require('../constants/TREEMConstants')
 
 var ODSettingsActions = {
@@ -54,6 +55,18 @@ var ODSettingsActions = {
     AppDispatcher.dispatch({
       actionType: TREEMCons.actionTypes.api.OD_RECEIVE_LIBRARIES,
       oDLibraries: oDLibraries
+    })
+  },
+  
+  scanStarted() {
+    AppDispatcher.dispatch({
+      actionType: TREEMCons.actionTypes.api.OD_SCAN_STARTED,
+    })
+  },
+  
+  scanFinished() {
+    AppDispatcher.dispatch({
+      actionType: TREEMCons.actionTypes.api.OD_SCAN_FINISHED
     })
   }
 }

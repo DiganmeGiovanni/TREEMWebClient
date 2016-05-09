@@ -10,6 +10,7 @@ var SideBar     = require('./SideBar.react')
 var MediaGrid   = require('./MediaGrid.react')
 var ODSettings  = require('./odsettings/ODSettings.react.js')
 
+
 function getAppState() {
   return {
     userIsLoggedIn: UserStore.userIsLoggedIn(),
@@ -39,6 +40,9 @@ var TREEMApp = React.createClass({
       var currentComponent = (<MediaGrid />)
       if (this.state.currentView === 'googleDrive') {
         currentComponent = (<ODSettings />)
+      }
+      else if (this.state.currentView === 'oneDrive') {
+        currentComponent = (<ODLibrary />)
       }
 
       return (

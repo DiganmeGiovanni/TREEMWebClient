@@ -126,6 +126,18 @@ var ODSettingsStore = objectAssign({}, EventEmitter.prototype, {
     this.apiFetchODLibraries(librariesOwner)
   },
 
+  scanStarted: function () {
+    displayingPane = 'od-scanning'
+    this.emitChange()
+  },
+
+  scanFinished: function () {
+    displayingPane = 'od-accounts'
+    this.emitChange()
+  },
+
+  //////////////////////////////////////////////////////////////////////////////
+
   emitChange: function() {
     this.emit(EVENT_CHANGE)
   },
@@ -137,6 +149,7 @@ var ODSettingsStore = objectAssign({}, EventEmitter.prototype, {
   removeChangeListener: function(callback) {
     this.removeListener(callback)
   },
+
 })
 
 AppDispatcher.register(function (action) {
@@ -169,6 +182,14 @@ AppDispatcher.register(function (action) {
 
     case TREMCons.actionTypes.api.OD_RECEIVE_LIBRARIES:
       ODSettingsStore.receiveODLibraries(action.oDLibraries)
+      break
+
+    case TREMCons.actionTypes.api.OD_SCAN_STARTED:
+      ODSettingsStore.scanStarted()
+      break
+
+    case TREMCons.actionTypes.api.OD_SCAN_FINISHED:
+      ODSettingsStore.scanFinished()
       break
   }
 })

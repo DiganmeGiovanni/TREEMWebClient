@@ -1,0 +1,6 @@
+
+module.exports = {
+
+  API_OD_CLIENT_ID: '0000000044187007',
+  API_OD_CLIENT_SECRET: 'N0yziXtzs7nI9T27fNI6HdiZq3PiXd3b'
+}

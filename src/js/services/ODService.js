@@ -92,6 +92,55 @@ var ODService = {
         oDSettingsActions.receiveChildren(body.value, parentFolderId)
       }
     })
+  },
+  
+  scanLibraries: function (oDEmail) {
+    var self = this
+
+    var params = {
+      method: 'GET',
+      url: TREEMCons.apiUrls.OD_SCAN_LIBS,
+      qs: {
+        odemail: oDEmail
+      }
+    }
+    
+    request(params, function (err, res, body) {
+      if (!err && res.statusCode === 200) {
+        oDSettingsActions.scanStarted()
+        setTimeout(function () {
+          self.scanStatus(oDEmail)
+        }, 5000)
+      }
+      else {
+        //console.error('Can not start scan just now ...')
+      }
+    })
+  },
+  
+  scanStatus: function (oDEmail) {
+    var self = this
+    var params = {
+      method: 'GET',
+      url: TREEMCons.apiUrls.OD_SCAN_STATUS,
+      qs: {
+        odemail: oDEmail
+      }
+    }
+
+    request(params, function (err, res, body) {
+      if (!err) {
+        body = JSON.parse(body)
+        if (!body.inProgress && body.success) {
+          oDSettingsActions.scanFinished()
+        }
+        else {
+          setTimeout(function () {
+            self.scanStatus(oDEmail)
+          }, 5000)
+        }
+      }
+    })
   }
 }
 

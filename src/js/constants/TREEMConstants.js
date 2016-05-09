@@ -7,7 +7,10 @@ module.exports = {
     OD_ACCOUNTS: 'http://treem.appspot.com/api/od/accounts',
     OD_CHILDREN: 'http://treem.appspot.com/api/od/children',
     OD_LIBRARIES:'http://treem.appspot.com/api/od/libraries',
-    OD_LIBRARY: 'http://treem.appspot.com/api/od/library'
+    OD_LIBRARY: 'http://treem.appspot.com/api/od/library',
+    OD_SCAN_LIBS: 'http://treem.appspot.com/api/od/scanlibs',
+    OD_SCAN_STATUS: 'http://treem.appspot.com/api/od/scanstatus'
+
   },
 
   actionTypes: {
@@ -20,7 +23,11 @@ module.exports = {
 
       OD_RECEIVE_ACCOUNTS: 'action-od-receive-accounts',
       OD_RECEIVE_CHILDREN: 'action-od-receive-children',
-      OD_RECEIVE_LIBRARIES:'action-od-receive-libraries'
+      OD_RECEIVE_LIBRARIES:'action-od-receive-libraries',
+      OD_SCAN_LIBRARIES: 'action-od-scan-libraries',
+      OD_SCAN_STARTED: 'action-od-scan-started',
+      OD_SCAN_STATUS: 'action-od-scan-started',
+      OD_SCAN_FINISHED: 'action-od-scan-finished'
     },
 
     USER_LOGIN: 'action-user-login',

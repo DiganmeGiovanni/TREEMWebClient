@@ -3,6 +3,7 @@ var React = require('react')
 
 var oDSettingsStore   = require('../../stores/ODSettingsStore')
 var ODSettingsActions = require('../../actions/ODSettingsActions')
+var oDServerActions   = require('../../actions/ODServerActions')
 var ODSettingsPane = require('./ODSettingsPane')
 
 
@@ -67,7 +68,7 @@ var ODSettings = React.createClass({
   
   _createODLibrary(folderId, folderName, e) {
     e.stopPropagation()
-    
+
     ODSettingsActions.createODLibrary(
       folderId,
       folderName,
@@ -84,6 +85,9 @@ var ODSettings = React.createClass({
     }
     else if (this.state.displaying === 'od-libraries') {
       return this._constructODLibrariesPane()
+    }
+    else if (this.state.displaying == 'od-scanning') {
+      return this._constructODScanningPane()
     }
   },
 
@@ -329,13 +333,45 @@ var ODSettings = React.createClass({
         )
       }
 
+    var topBarBtn = (
+      <div className="pull-right">
+        <button 
+            className="btn btn-default btn-clean"
+            onClick={oDServerActions.scanLibraries.bind(null, this.state.oDLibrariesOwner)}>
+          <span className="fa fa-music"></span>
+        </button>
+        <button
+            className="btn btn-default btn-clean pull-right"
+            onClick={ODSettingsActions.apiFetchAccounts}>
+          <span className="fa fa-users"></span>
+        </button>
+      </div>
+    )
+
       return (
         <ODSettingsPane
           paneBody={settingsPaneBody}
           title="OneDrive Media libraries"
-          topBarButton=''
+          topBarButton={topBarBtn}
         />
       )
+  },
+
+  _constructODScanningPane() {
+    var scanningPaneBody = (
+      <div className="col-xs-12 text-center">
+        <h2 className="fa fa-cog fa-spin fa-3x fa-fw"></h2>
+        <h5>Scanning your OneDrive libraries</h5>
+      </div>
+    )
+
+    return (
+      <ODSettingsPane
+        paneBody={scanningPaneBody}
+        title="Background libraries scanning"
+        topBarButton=""
+      />
+    )
   },
 
   _noPropagate(e) {

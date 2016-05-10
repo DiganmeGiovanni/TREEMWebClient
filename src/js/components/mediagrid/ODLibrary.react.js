@@ -1,6 +1,7 @@
 
 var React = require('react')
 var oDLibraryStore = require('../../stores/ODLibraryStore')
+var UserStore      = require('../../stores/UserStore')
 var oDServerActions = require('../../actions/ODServerActions')
 
 function getState() {
@@ -18,7 +19,7 @@ var ODLibrary = React.createClass({
 
   componentDidMount() {
     oDLibraryStore.addChangeListener(this._onChange)
-    oDServerActions.fetchODMCollection('giovanni_fi05@live.com')
+    oDServerActions.fetchODMCollection(UserStore.getUserEmail())
   },
   
   componentWillUnmount() {

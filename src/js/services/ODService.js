@@ -77,13 +77,13 @@ var ODService = {
     })
   },
   
-  fetchODMCollection(oDEmail) {
+  fetchODMCollection(email) {
 
     var params = {
       method: 'GET',
       url: TREEMCons.apiUrls.OD_MCOLLECTION,
       qs: {
-        odemail: oDEmail
+        email: email
       }
     }
     
@@ -117,14 +117,14 @@ var ODService = {
     })
   },
   
-  scanLibraries: function (oDEmail) {
+  scanLibraries: function (email) {
     var self = this
 
     var params = {
       method: 'GET',
       url: TREEMCons.apiUrls.OD_SCAN_LIBS,
       qs: {
-        odemail: oDEmail
+        email: email
       }
     }
     
@@ -132,7 +132,7 @@ var ODService = {
       if (!err && res.statusCode === 200) {
         oDSettingsActions.scanStarted()
         setTimeout(function () {
-          self.scanStatus(oDEmail)
+          self.scanStatus(email)
         }, 5000)
       }
       else {
@@ -141,13 +141,13 @@ var ODService = {
     })
   },
   
-  scanStatus: function (oDEmail) {
+  scanStatus: function (email) {
     var self = this
     var params = {
       method: 'GET',
       url: TREEMCons.apiUrls.OD_SCAN_STATUS,
       qs: {
-        odemail: oDEmail
+        email: email
       }
     }
 
@@ -159,7 +159,7 @@ var ODService = {
         }
         else {
           setTimeout(function () {
-            self.scanStatus(oDEmail)
+            self.scanStatus(email)
           }, 5000)
         }
       }

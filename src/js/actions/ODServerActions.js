@@ -5,29 +5,29 @@ var TREEMCons = require('../constants/TREEMConstants')
 
 var ODServerActions = {
   
-  fetchODMCollection(oDEmail) {
+  fetchODMCollection(email) {
     AppDispatcher.dispatch({
       actionType: TREEMCons.actionTypes.api.OD_FETCH_MCOLLECTION
     })
     
-    oDService.fetchODMCollection(oDEmail)
+    oDService.fetchODMCollection(email)
   },
   
-  scanLibraries: function (oDEmail) {
+  scanLibraries: function (email) {
     AppDispatcher.dispatch({
       actionType: TREEMCons.actionTypes.api.OD_SCAN_LIBRARIES,
-      oDEmail: oDEmail
+      email: email
     })
 
-    oDService.scanLibraries(oDEmail)
+    oDService.scanLibraries(email)
   },
 
-  scanStatus: function (oDEmail) {
+  scanStatus: function (email) {
     AppDispatcher.dispatch({
       actionType: TREEMCons.actionTypes.api.OD_SCAN_STATUS
     })
 
-    oDService.scanStatus(oDEmail)
+    oDService.scanStatus(email)
   },
 }
 

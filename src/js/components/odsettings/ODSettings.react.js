@@ -1,6 +1,7 @@
 
 var React = require('react')
 
+var UserStore         = require('../../stores/UserStore')
 var oDSettingsStore   = require('../../stores/ODSettingsStore')
 var ODSettingsActions = require('../../actions/ODSettingsActions')
 var oDServerActions   = require('../../actions/ODServerActions')
@@ -337,7 +338,7 @@ var ODSettings = React.createClass({
       <div className="pull-right">
         <button 
             className="btn btn-default btn-clean"
-            onClick={oDServerActions.scanLibraries.bind(null, this.state.oDLibrariesOwner)}>
+            onClick={oDServerActions.scanLibraries.bind(null, UserStore.getUserEmail())}>
           <span className="fa fa-music"></span>
         </button>
         <button

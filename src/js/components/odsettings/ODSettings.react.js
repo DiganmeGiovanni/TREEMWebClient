@@ -378,7 +378,7 @@ var ODSettings = React.createClass({
     e.stopPropagation()
   },
 
-  _onChange() {
+  _onChange: function () {
     this.setState(getState())
   }
 })

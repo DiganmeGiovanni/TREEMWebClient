@@ -1,13 +1,14 @@
 
 var React = require('react')
 var UserActions = require('../actions/UserActions')
+var serverActions = require('../actions/ServerActions')
 
 var LandingPage = React.createClass({
 
   componentDidMount() {
     var odCode = this._getUrlParam('odcode')
     if (odCode) {
-      UserActions.oDCodeLogin(odCode)
+      serverActions.oDCodeLogin(odCode)
     }
   },
 

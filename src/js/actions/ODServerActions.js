@@ -5,6 +5,14 @@ var TREEMCons = require('../constants/TREEMConstants')
 
 var ODServerActions = {
   
+  fetchODMCollection(oDEmail) {
+    AppDispatcher.dispatch({
+      actionType: TREEMCons.actionTypes.api.OD_FETCH_MCOLLECTION
+    })
+    
+    oDService.fetchODMCollection(oDEmail)
+  },
+  
   scanLibraries: function (oDEmail) {
     AppDispatcher.dispatch({
       actionType: TREEMCons.actionTypes.api.OD_SCAN_LIBRARIES,

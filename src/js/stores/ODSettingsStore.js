@@ -147,7 +147,7 @@ var ODSettingsStore = objectAssign({}, EventEmitter.prototype, {
   },
 
   removeChangeListener: function(callback) {
-    this.removeListener(callback)
+    //this.removeListener(callback)
   },
 
 })

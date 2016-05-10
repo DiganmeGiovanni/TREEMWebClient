@@ -1,11 +1,13 @@
 
 var request = require('request')
 var oDSettingsActions = require('../actions/ODSettingsActions')
+var oDLibraryActions = require('../actions/ODLibraryActions')
 var TREEMCons = require('../constants/TREEMConstants')
+var oDUserActions = require('../actions/UserActions')
 
 var ODService = {
 
-  oDCodeLogin(oDCode, callback) {
+  oDCodeLogin(oDCode) {
 
     var params = {
       method: 'GET',
@@ -16,7 +18,10 @@ var ODService = {
     }
 
     request(params, function (err, res, body) {
-      callback(err, body)
+      if (!err) {
+        body = JSON.parse(body)
+        oDUserActions.receiveUser(body)
+      }
     })
   },
 
@@ -68,6 +73,24 @@ var ODService = {
       if (!err) {
         body = JSON.parse(body)
         oDSettingsActions.receiveODLibraries(body)
+      }
+    })
+  },
+  
+  fetchODMCollection(oDEmail) {
+
+    var params = {
+      method: 'GET',
+      url: TREEMCons.apiUrls.OD_MCOLLECTION,
+      qs: {
+        odemail: oDEmail
+      }
+    }
+    
+    request(params, function (err, res, body) {
+      if (!err) {
+        body = JSON.parse(body)
+        oDLibraryActions.receiveODMCollection(body)
       }
     })
   },

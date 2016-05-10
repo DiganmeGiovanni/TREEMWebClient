@@ -6,7 +6,7 @@ var objectAssign  = require('object-assign')
 var EVENT_CHANGE = 'event-view-change'
 var TREEMCons    = require('../constants/TREEMConstants')
 
-var currentView = 'googleDrive'//'media-library'
+var currentView = 'media-library'
 
 var ViewStore = objectAssign({}, EventEmitter.prototype, {
 

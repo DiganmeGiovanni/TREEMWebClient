@@ -21,13 +21,14 @@ var UserActions = {
       actionType: TREEMCons.actionTypes.USER_OD_LOGIN
     })
   },
-
-  oDCodeLogin: function (oDCode) {
+  
+  receiveUser: function (user) {
     AppDispatcher.dispatch({
-      actionType: TREEMCons.actionTypes.USER_OD_CODE_LOGIN,
-      oDCode: oDCode
+      actionType: TREEMCons.actionTypes.USER_RESULT,
+      user: user
     })
-  }
+  },
+
 }
 
 

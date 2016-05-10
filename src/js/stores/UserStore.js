@@ -6,12 +6,28 @@ var objectAssign  = require('object-assign')
 var EVENT_CHANGE = 'event-user-change'
 var TREEMCons    = require('../constants/TREEMConstants')
 var TREEMKeys    = require('../constants/TREEMKeys')
-var oDService  = require('../services/ODService')
+
+var user = {
+  fullName: '',
+  email: ''
+}
 
 
 /******************************************************************************/
 
 var UserStore = objectAssign({}, EventEmitter.prototype, {
+
+  getUser() {
+    return user
+  },
+
+  getUserEmail() {
+    return user.email
+  },
+
+  getUserFullName() {
+    return user.fullName
+  },
 
   oDLogin: function () {
     var targetUrl = 'https://login.live.com/oauth20_authorize.srf?'
@@ -23,36 +39,24 @@ var UserStore = objectAssign({}, EventEmitter.prototype, {
     window.location = targetUrl
   },
 
-  oDCodeLogin: function (oDCode) {
-    var self = this
+  receiveUser(nUser) {
+    user.fullName = nUser.fname + " " + nUser.lname
+    user.email    = nUser.email
 
-    oDService.oDCodeLogin(oDCode, function (err, user) {
-      if (err) {
-        //console.error('Error while login user on backend')
-        //console.error(err)
-      }
-      else {
-        user = JSON.parse(user)
-
-        TREEMCons.user.fullName = user.fname + " " + user.lname
-        TREEMCons.user.email    = user.email
-
-        self.emitChange()
-      }
-    })
+    this.emitChange()
   },
 
   logoutUser: function () {
     var self = this
 
-    TREEMCons.user.fullName = ""
-    TREEMCons.user.email    = ""
+    user.fullName = ""
+    user.email    = ""
 
     self.emitChange()
   },
 
   userIsLoggedIn: function () {
-    return true //TREEMCons.user.email && TREEMCons.user.email.length > 0
+    return user.email && user.email.length > 0
   },
 
   emitChange: function() {
@@ -79,9 +83,10 @@ AppDispatcher.register(function (action) {
       UserStore.oDLogin()
       break
 
-    case TREEMCons.actionTypes.USER_OD_CODE_LOGIN:
-      UserStore.oDCodeLogin(action.oDCode)
+    case TREEMCons.actionTypes.USER_RESULT:
+      UserStore.receiveUser(action.user)
       break
+    
   }
 })
 

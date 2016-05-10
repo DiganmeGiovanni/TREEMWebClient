@@ -4,12 +4,12 @@ var React = require('react')
 var UserStore = require('../stores/UserStore')
 var ViewStore = require('../stores/ViewStore')
 
-var LandingPage = require('../components/LandingPage.react')
+var LandingPage = require('./LandingPage.react')
 var HeaderBar   = require('./HeaderBar.react')
 var SideBar     = require('./SideBar.react')
 var MediaGrid   = require('./MediaGrid.react')
 var ODSettings  = require('./odsettings/ODSettings.react.js')
-
+var ODLibrary   = require('./mediagrid/ODLibrary.react')
 
 function getAppState() {
   return {

@@ -9,6 +9,19 @@ var ODLibraryActions = {
       actionType: TREEMCons.actionTypes.api.OD_RECEIVE_MCOLLECTION,
       oDMCollection: oDMCollection
     })
+  },
+  
+  viewAlbum(albumId) {
+    AppDispatcher.dispatch({
+      actionType: TREEMCons.actionTypes.OD_LIBRARY_VIEW_ALBUM,
+      albumId: albumId
+    })
+  },
+  
+  viewGrid() {
+    AppDispatcher.dispatch({
+      actionType: TREEMCons.actionTypes.OD_LIBRARY_VIEW_GRID
+    })
   }
 }
 

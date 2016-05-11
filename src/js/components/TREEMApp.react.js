@@ -10,6 +10,7 @@ var SideBar     = require('./SideBar.react')
 var MediaGrid   = require('./MediaGrid.react')
 var ODSettings  = require('./odsettings/ODSettings.react.js')
 var ODLibrary   = require('./mediagrid/ODLibrary.react')
+var MediaPlayer = require('./MediaPlayer.react')
 
 function getAppState() {
   return {
@@ -48,10 +49,11 @@ var TREEMApp = React.createClass({
       return (
         <div className="full-height">
           <HeaderBar />
-          <div className="columns full-height-minus-header-bar">
+          <div className="columns full-height-minus-bars">
             <SideBar currentView={this.state.currentView} />
             {currentComponent}
           </div>
+          <MediaPlayer />
         </div>
       )
     }

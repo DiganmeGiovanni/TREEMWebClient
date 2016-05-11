@@ -5,6 +5,14 @@ var TREEMCons = require('../constants/TREEMConstants')
 
 var ODServerActions = {
   
+  itemContentUrl(itemId, oDEmail) {
+    AppDispatcher.dispatch({
+      actionType: TREEMCons.actionTypes.api.OD_ITEM_FETCH_CONTENT_URL
+    })
+    
+    oDService
+  },
+  
   fetchODMCollection(email) {
     AppDispatcher.dispatch({
       actionType: TREEMCons.actionTypes.api.OD_FETCH_MCOLLECTION

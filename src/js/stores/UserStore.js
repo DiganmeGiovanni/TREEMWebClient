@@ -9,7 +9,7 @@ var TREEMKeys    = require('../constants/TREEMKeys')
 
 var user = {
   fullName: '',
-  email: ''
+  email: 'giovanni_fi05@live.com' // Delete fake email
 }
 
 

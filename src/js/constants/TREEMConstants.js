@@ -6,11 +6,14 @@ module.exports = {
 
     OD_ACCOUNTS: 'http://treem.appspot.com/api/od/accounts',
     OD_CHILDREN: 'http://treem.appspot.com/api/od/children',
+    OD_ITEM_FETCH_CONTENT_URL: 'http://treem.appspot.com/api/od/itemcontentsurl',
     OD_LIBRARIES:'http://treem.appspot.com/api/od/libraries',
     OD_LIBRARY: 'http://treem.appspot.com/api/od/library',
     OD_SCAN_LIBS: 'http://treem.appspot.com/api/od/scanlibs',
     OD_SCAN_STATUS: 'http://treem.appspot.com/api/od/scanstatus',
-    OD_MCOLLECTION: 'http://treem.appspot.com/api/od/mcollection'
+    OD_MCOLLECTION: 'http://treem.appspot.com/api/od/mcollection',
+
+    SPOTIFY_SEARCH: 'https://api.spotify.com/v1/search'
   },
 
   actionTypes: {
@@ -19,6 +22,9 @@ module.exports = {
       OD_FETCH_CHILDREN: 'action-od-fetch-children',
       OD_FETCH_LIBRARIES:'action-od-fetch-libraries',
       OD_FETCH_MCOLLECTION: 'action-od-fetch-mcollection',
+
+      OD_ITEM_FETCH_CONTENT_URL: 'action-od-content-url',
+      OD_ITEM_RECEIVE_CONTENT_URL: 'action-od-content-url',
 
       OD_CREATE_LIBRARY: 'action-od-create-library',
 
@@ -32,6 +38,17 @@ module.exports = {
       OD_SCAN_FINISHED: 'action-od-scan-finished'
     },
 
+    MEDIA_PLAYER_QUEUE_SONG: 'action-media-player-queue-song',
+    MEDIA_PLAYER_QUEUE_ALBUM: 'action-media-player-queue-album',
+    MEDIA_PLAYER_QUEUE_PLAY_SONG: 'action-media-player-queue-play-song',
+    MEDIA_PLAYER_QUEUE_PLAY_ALBUM: 'action-media-player-queue-play-album',
+    MEDIA_PLAYER_NEXT_SONG: 'action-media-player-next',
+    MEDIA_PLAYER_PREV_SONG: 'action-media-player-prev',
+    MEDIA_PLAYER_PLAY_PAUSE: 'action-media-player-play-pause',
+
+    OD_LIBRARY_VIEW_ALBUM: 'action-od-library-view-album',
+    OD_LIBRARY_VIEW_GRID: 'action-od-library-view-grid',
+
     USER_LOGIN: 'action-user-login',
     USER_LOGOUT: 'action-user-logout',
     USER_RESULT: 'action-user-receive',
@@ -43,13 +60,4 @@ module.exports = {
     VIEW_GO_TO_VIEW: 'action-view-go-to-view'
   },
 
-  //
-  // TODO Move this data to userStore
-  // In-memory user data
-  user: {
-    fullName: '',
-    email: 'giovanni_fi05@live.com',
-
-    oDAccounts: []
-  }
 }

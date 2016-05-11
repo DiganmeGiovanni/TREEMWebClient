@@ -4,6 +4,7 @@ var oDSettingsActions = require('../actions/ODSettingsActions')
 var oDLibraryActions = require('../actions/ODLibraryActions')
 var TREEMCons = require('../constants/TREEMConstants')
 var oDUserActions = require('../actions/UserActions')
+var mediaPlayerActions = require('../actions/MediaPlayerActions')
 
 var ODService = {
 
@@ -39,6 +40,25 @@ var ODService = {
     request(params, function (err, res, body) {
       if (!err) {
         // body = JSON.parse(body)
+      }
+    })
+  },
+
+  fetchItemContentUrl(itemId, oDEmail) {
+
+    var params = {
+      method: 'GET',
+      url: TREEMCons.apiUrls.OD_ITEM_FETCH_CONTENT_URL,
+      qs: {
+        itemid: itemId,
+        odemail: oDEmail,
+      }
+    }
+
+    request(params, function (err, res, body) {
+      if (!err && res.statusCode === 200) {
+        body = JSON.parse(body)
+        mediaPlayerActions.receiveItemContentsUrl(body.itemId, body.contentsUrl)
       }
     })
   },

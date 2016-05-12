@@ -10,7 +10,7 @@ var ODServerActions = {
       actionType: TREEMCons.actionTypes.api.OD_ITEM_FETCH_CONTENT_URL
     })
     
-    oDService
+    oDService.fetchItemContentUrl(itemId, oDEmail)
   },
   
   fetchODMCollection(email) {

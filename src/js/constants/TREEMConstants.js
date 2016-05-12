@@ -44,7 +44,7 @@ module.exports = {
     MEDIA_PLAYER_QUEUE_PLAY_ALBUM: 'action-media-player-queue-play-album',
     MEDIA_PLAYER_NEXT_SONG: 'action-media-player-next',
     MEDIA_PLAYER_PREV_SONG: 'action-media-player-prev',
-    MEDIA_PLAYER_PLAY_PAUSE: 'action-media-player-play-pause',
+    MEDIA_PLAYER_PLAY_PAUSE: 'action-media-player-play-playPause',
 
     OD_LIBRARY_VIEW_ALBUM: 'action-od-library-view-album',
     OD_LIBRARY_VIEW_GRID: 'action-od-library-view-grid',

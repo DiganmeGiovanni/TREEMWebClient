@@ -1,10 +1,11 @@
 
 var request = require('request')
-var oDSettingsActions = require('../actions/ODSettingsActions')
-var oDLibraryActions = require('../actions/ODLibraryActions')
+
 var TREEMCons = require('../constants/TREEMConstants')
-var oDUserActions = require('../actions/UserActions')
 var mediaPlayerActions = require('../actions/MediaPlayerActions')
+var oDLibraryActions   = require('../actions/ODLibraryActions')
+var oDSettingsActions  = require('../actions/ODSettingsActions')
+var oDUserActions      = require('../actions/UserActions')
 
 var ODService = {
 

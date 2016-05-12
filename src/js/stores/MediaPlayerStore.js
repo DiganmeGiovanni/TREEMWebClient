@@ -3,61 +3,92 @@ var AppDispatcher = require('../dispatcher/AppDispatcher')
 var EventEmitter  = require('events').EventEmitter
 var objectAssign  = require('object-assign')
 
+var oDService = require('../services/ODService')
 var TREEMCons = require('../constants/TREEMConstants')
 
 var EVENT_CHANGE = 'store-media-player-change'
 
+/**
+ * Each queue item must have the next properties:
+ * - artistName: String,
+ * - albumName: String,
+ * - contentUrl: String,   // Usually updated when user plays song
+ * - coverUrl: String,
+ * - song: {
+ *     fileId: String
+ *     ownerInfo: {
+ *       ODEmail: String
+ *     }
+ *   }
+ *
+ * @type {Array}
+ */
 var queue = []
-var currentQueueIndex = -1
-var currentSongUrl = ''
-
-var playing = false
-var playFromStart = true
+var currentIndex = -1
+var playbackPaused = true
+var skipToCurrent  = false
 
 var MediaPlayerStore = objectAssign({}, EventEmitter.prototype, {
 
-  isPlaying() {
-    return playing
+  getCurrentIndex() {
+    return currentIndex
   },
   
-  getPlayingFromStart() {
-    return playFromStart
+  getPlaybackPaused: function() {
+    return playbackPaused
   },
   
-  getCurrentSongUrl() {
-    return currentSongUrl
+  getSkipToCurrent() {
+    return skipToCurrent
   },
-  
-  getCurrentQueueIndex() {
-    return currentQueueIndex
+
+  getQueue() {
+    return queue
   },
-  
-  getCurrentSong() {
-    if (queue[currentQueueIndex]) {
-      return queue[currentQueueIndex]
-    }
-    else {
-      return {
-        artistName: '- - -',
-        albumName: '- -',
-        coverUrl: 'http://75orlessrecords.com/wp-content/themes/soundcheck/images/default-artwork.png',
-        song: {
-        }
-      }
+
+  clearAllContentsUrls() {
+    for(var i = 0; i < queue.length; i++) {
+      queue[i].contentUrl = null
     }
   },
 
-  getNextSong() {
-    if (queue[currentQueueIndex + 1]) {
-      return queue[currentQueueIndex + 1]
-    }
-    else {
-      return null
+  nextSong() {
+    this.clearAllContentsUrls()
+    currentIndex += 1
+    skipToCurrent  = true
+    playbackPaused = false
+
+    // Request contents urls
+    var currentSong = queue[currentIndex]
+    if (currentSong) {
+      this.emitChange()
+      
+      var itemId = currentSong.song.fileId
+      var oDEmail = currentSong.song.ownerInfo.ODEmail
+      oDService.fetchItemContentUrl(itemId, oDEmail)
     }
   },
   
-  getQueue() {
-    return queue
+  prevSong() {
+    this.clearAllContentsUrls()
+    currentIndex -= 1
+    skipToCurrent  = true
+    playbackPaused = false
+
+    // Request contents urls
+    var currentSong = queue[currentIndex]
+    if (currentSong) {
+      this.emitChange()
+      
+      var itemId = currentSong.song.fileId
+      var oDEmail = currentSong.song.ownerInfo.ODEmail
+      oDService.fetchItemContentUrl(itemId, oDEmail)
+    }
+  },
+  
+  playPause() {
+    playbackPaused = !playbackPaused
+    this.emitChange()
   },
   
   queueSong(artistName, albumName, coverUrl, song) {
@@ -67,8 +98,6 @@ var MediaPlayerStore = objectAssign({}, EventEmitter.prototype, {
       coverUrl: coverUrl,
       song: song
     })
-    
-    this.emitChange()
   },
 
   queuePlaySong(artistName, albumName, coverUrl, song) {
@@ -79,37 +108,26 @@ var MediaPlayerStore = objectAssign({}, EventEmitter.prototype, {
       song: song
     })
 
-    this.playSongAt(queue.length - 1)
-  },
-
-  nextSong() {
-    if (queue[currentQueueIndex + 1]) {
-      this.playSongAt(currentQueueIndex + 1)
-    }
-  },
-
-  playPause() {
-    playing = !playing
-    playFromStart = false
-
+    currentIndex = queue.length - 1 
+    skipToCurrent = true
+    playbackPaused= false
+    
     this.emitChange()
   },
-  
-  playSongAt(index) {
-    if (queue[index]) {
-      playFromStart = true
-      playing = true
-      currentQueueIndex = index
-      currentSongUrl = ''
 
-      this.emitChange()
-    }
-  },
-  
   receiveContentsUrl(itemId, contentsUrl) {
-    if (queue[currentQueueIndex] && queue[currentQueueIndex].song.fileId === itemId) {
-      currentSongUrl = contentsUrl
-      this.emitChange()
+    console.log('Receiving url for: ' + itemId)
+    
+    for (var i = 0; i < queue.length; i++) {
+      if (queue[i].song.fileId === itemId) {
+        queue[i].contentUrl = contentsUrl
+
+        this.emitChange()
+        skipToCurrent = false
+      }
+      else {
+        queue[i].contentUrl = null
+      }
     }
   },
 
@@ -125,7 +143,7 @@ var MediaPlayerStore = objectAssign({}, EventEmitter.prototype, {
   },
 
   removeChangeListener: function(callback) {
-    //this.removeListener(callback)
+    this.removeListener(callback)
   },
 })
 
@@ -164,6 +182,10 @@ AppDispatcher.register(function (action) {
 
     case TREEMCons.actionTypes.MEDIA_PLAYER_NEXT_SONG:
       MediaPlayerStore.nextSong()
+      break
+    
+    case TREEMCons.actionTypes.MEDIA_PLAYER_PREV_SONG:
+      MediaPlayerStore.prevSong()
       break
   }
 })

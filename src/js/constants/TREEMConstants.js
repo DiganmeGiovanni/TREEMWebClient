@@ -12,6 +12,7 @@ module.exports = {
     OD_SCAN_LIBS: 'http://treem.appspot.com/api/od/scanlibs',
     OD_SCAN_STATUS: 'http://treem.appspot.com/api/od/scanstatus',
     OD_MCOLLECTION: 'http://treem.appspot.com/api/od/mcollection',
+    OD_FETCH_ALBUM_COVER: 'http://treem.appspot.com/api/od/albumcoverurl',
 
     SPOTIFY_SEARCH: 'https://api.spotify.com/v1/search'
   },

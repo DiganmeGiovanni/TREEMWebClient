@@ -95,10 +95,8 @@ var ODLibrary = React.createClass({
         albumsJSX.push(
           <AlbumCard
               key={'alb-card-' + i + '-' + j }
-              albumId={album._id}
-              coverUrl={album.coverUrl}
-              artist={artist.name}
-              title={album.title}
+              album={album}
+              artistName={artist.name}
           />
         )
       }

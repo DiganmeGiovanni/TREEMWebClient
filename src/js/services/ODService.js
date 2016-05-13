@@ -6,6 +6,7 @@ var mediaPlayerActions = require('../actions/MediaPlayerActions')
 var oDLibraryActions   = require('../actions/ODLibraryActions')
 var oDSettingsActions  = require('../actions/ODSettingsActions')
 var oDUserActions      = require('../actions/UserActions')
+var UserStore          = require('../stores/UserStore')
 
 var ODService = {
 
@@ -69,7 +70,7 @@ var ODService = {
       method: 'GET',
       url: TREEMCons.apiUrls.OD_ACCOUNTS,
       qs: {
-        'email': TREEMCons.user.email
+        'email': UserStore.getUserEmail()
       }
     }
 
@@ -134,6 +135,27 @@ var ODService = {
       if (!err) {
         body = JSON.parse(body)
         oDSettingsActions.receiveChildren(body.value, parentFolderId)
+      }
+    })
+  },
+  
+  fetchCoverUrl(oDEmail, albumName, artistName, fileId, callback) {
+    
+    var params = {
+      method: 'GET',
+      url: TREEMCons.apiUrls.OD_FETCH_ALBUM_COVER,
+      qs: {
+        odemail: oDEmail,
+        albumtitle: albumName,
+        artistname: artistName,
+        fileid: fileId,
+      }
+    }
+
+    request(params, function (err, res, body) {
+      if (!err) {
+        body = JSON.parse(body)
+        callback(null, body.coverUrl)
       }
     })
   },

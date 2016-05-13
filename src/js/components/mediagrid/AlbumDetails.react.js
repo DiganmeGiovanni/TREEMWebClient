@@ -1,6 +1,7 @@
 
 var React = require('react')
-var spotifyService = require('../../services/SpotifyService')
+
+var oDService = require('../../services/ODService')
 var oDLibraryActions = require('../../actions/ODLibraryActions')
 var mediaPlayerActions = require('../../actions/MediaPlayerActions')
 var mediaPlayerServerActions = require('../../actions/MediaPlayerServerActions')
@@ -9,12 +10,12 @@ var AlbumDetails = React.createClass({
 
   getInitialState() {
     return {
-      coverUrl: ''
+      coverUrl: 'http://bobjames.com/wp-content/themes/soundcheck/images/default-album-artwork.png'
     }
   },
 
   componentDidMount() {
-    this.fetchAlbumCover()
+    this.requestCoverUrl()
   },
   
   render() {
@@ -22,8 +23,6 @@ var AlbumDetails = React.createClass({
     var artist   = this.props.artist
     var songs    = this.props.album.songs
     var coverUrl = this.state.coverUrl
-      ? this.state.coverUrl
-      : this.props.album.coverUrl
 
     var songsJSX = this.constructsSongs(songs)
 
@@ -52,12 +51,18 @@ var AlbumDetails = React.createClass({
           <h4>{album.title}</h4>
           <h5>{artist.name}</h5>
 
-          <button className="btn btn-default">
+          <button
+            className="btn btn-default"
+            onClick={this.queuePlayAlbum}
+          >
             <span className="fa fa-play"></span>
             <span>&nbsp;&nbsp;Play now</span>
           </button>
           &nbsp;&nbsp;
-          <button className="btn btn-default">
+          <button
+            className="btn btn-default"
+            onClick={this.queueAlbum}
+          >
             <span className="fa fa-clock-o"></span>
             <span>&nbsp;&nbsp;Queue</span>
           </button>
@@ -109,22 +114,18 @@ var AlbumDetails = React.createClass({
     return songsJSX
   },
 
-  fetchAlbumCover() {
+  requestCoverUrl() {
     var self = this
 
-    var artist = this.props.album.artist
-    var title  = this.props.album.title
+    var album      = this.props.album
+    var albumTitle = album.title
+    var artistName = this.props.artist.name
+    var fileId     = album.songs[0].fileId
+    var oDEmail    = album.songs[0].ownerInfo.ODEmail
 
-    spotifyService.searchAlbum(artist, title, function (err, results) {
+    oDService.fetchCoverUrl(oDEmail, albumTitle, artistName, fileId, function (err, coverUrl) {
       if (!err) {
-        var items = results.albums.items
-        if (items && items[0]) {
-          var coverUrl = items[0].images[1].url
-          self.updateCoverUrl(coverUrl)
-        }
-      }
-      else {
-        console.error(err)
+        self.updateCoverUrl(coverUrl)
       }
     })
   },
@@ -141,7 +142,32 @@ var AlbumDetails = React.createClass({
   
   queuePlaySong(artistName, albumName, coverUrl, song) {
     mediaPlayerServerActions.queuePlaySong(artistName, albumName, coverUrl, song)
-  }
+  },
+
+  queueAlbum() {
+    var artistName = this.props.artist.name
+    var albumName  = this.props.album.title
+    var coverUrl   = this.props.album.coverUrl
+    var songs      = this.props.album.songs
+
+    for (var i = 0; i < songs.length; i++) {
+      this.queueSong(artistName, albumName, coverUrl, songs[i])
+    }
+  },
+
+  queuePlayAlbum() {
+    var artistName = this.props.artist.name
+    var albumName  = this.props.album.title
+    var coverUrl   = this.props.album.coverUrl
+    var songs      = this.props.album.songs
+
+    // Queue and play the first track only
+    this.queuePlaySong(artistName, albumName, coverUrl, songs[0])
+
+    for (var i = 1; i < songs.length; i++) {
+      this.queueSong(artistName, albumName, coverUrl, songs[i])
+    }
+  },
 })
 
 module.exports = AlbumDetails

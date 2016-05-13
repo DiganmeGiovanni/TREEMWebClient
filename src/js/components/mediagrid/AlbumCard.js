@@ -1,45 +1,29 @@
 
 var React = require('react')
-var spotifyService = require('../../services/SpotifyService')
+var oDService = require('../../services/ODService')
 var oDLibraryActions = require('../../actions/ODLibraryActions')
 
 var AlbumCard = React.createClass({
   
   getInitialState() {
     return {
-      coverUrl: ''
+      coverUrl: 'http://bobjames.com/wp-content/themes/soundcheck/images/default-album-artwork.png'
     }
   },
   
   componentDidMount() {
-    var self = this
-    var artist = this.props.artist
-    var title  = this.props.title
 
-    spotifyService.searchAlbum(artist, title, function (err, results) {
-      if (!err) {
-        var items = results.albums.items
-        if (items && items[0]) {
-          var coverUrl = items[0].images[1].url
-          self.updateCoverUrl(coverUrl)
-        }
-      }
-      else {
-        console.error(err)
-      }
-    })
+    this.requestCoverUrl()
   },
   
   render() {
     var coverUrl = this.state.coverUrl
-        ? this.state.coverUrl
-        : this.props.coverUrl
 
     return (
       <div className="col-xs-6 col-sm-4 col-md-3 col-lg-2 text-center album-card">
         <div
               className="album-card-cover-container"
-              onClick={oDLibraryActions.viewAlbum.bind(null, this.props.albumId)}>
+              onClick={oDLibraryActions.viewAlbum.bind(null, this.props.album._id)}>
           <img
             className="album-card-cover"
             src={coverUrl}
@@ -48,11 +32,27 @@ var AlbumCard = React.createClass({
           />
         </div>
 
-        <span className="album-card-title">{this.props.title}</span>
+        <span className="album-card-title">{this.props.album.title}</span>
         <br/>
-        <span className="album-card-artist">{this.props.artist}</span>
+        <span className="album-card-artist">{this.props.artistName}</span>
       </div>
     )
+  },
+  
+  requestCoverUrl() {
+    var self = this
+    
+    var album      = this.props.album
+    var albumTitle = album.title
+    var artistName = this.props.artistName
+    var fileId     = album.songs[0].fileId
+    var oDEmail    = album.songs[0].ownerInfo.ODEmail
+
+    oDService.fetchCoverUrl(oDEmail, albumTitle, artistName, fileId, function (err, coverUrl) {
+      if (!err) {
+        self.updateCoverUrl(coverUrl)
+      }
+    })
   },
 
   updateCoverUrl(coverUrl) {

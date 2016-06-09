@@ -4,18 +4,18 @@ var oDService = require('../../services/ODService')
 var oDLibraryActions = require('../../actions/ODLibraryActions')
 
 var AlbumCard = React.createClass({
-  
+
   getInitialState() {
     return {
       coverUrl: 'http://bobjames.com/wp-content/themes/soundcheck/images/default-album-artwork.png'
     }
   },
-  
+
   componentDidMount() {
 
     this.requestCoverUrl()
   },
-  
+
   render() {
     var coverUrl = this.state.coverUrl
 
@@ -28,7 +28,8 @@ var AlbumCard = React.createClass({
             className="album-card-cover"
             src={coverUrl}
             alt=""
-            width="80%"
+            height="180px"
+            width="180px"
           />
         </div>
 
@@ -38,10 +39,10 @@ var AlbumCard = React.createClass({
       </div>
     )
   },
-  
+
   requestCoverUrl() {
     var self = this
-    
+
     var album      = this.props.album
     var albumTitle = album.title
     var artistName = this.props.artistName
